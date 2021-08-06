@@ -1,12 +1,12 @@
 FROM mariadb/maxscale:2.5.14
-MAINTAINER wdmaster@gmail.com
+LABEL org.opencontainers.image.authors="wdmaster@gmail.com"
 
 # Setup for Galera Service (GS), not for Master-Slave environments
 
 # We set some defaults for config creation. Can be overwritten at runtime.
 ENV MAX_USER="maxscale" \
     MAX_PASS="maxscalepass" \
-    ENABLE_ROOT_USER=0 \ 
+    ENABLE_ROOT_USER=0 \
     SPLITTER_PORT=3306 \
     ROUTER_PORT=3307 \
     API_PORT=8989 \
@@ -30,8 +30,8 @@ VOLUME ["/etc/maxscale.d"]
 # We expose our set Listener Ports
 EXPOSE $SPLITTER_PORT $ROUTER_PORT $API_PORT
 
-COPY maxscale.cnf /etc/
-ENTRYPOINT ["maxscale", "-d", "-U", "maxscale", "-l", "stdout"]
+#COPY maxscale.cnf /etc/
+#ENTRYPOINT ["maxscale", "-d", "-U", "maxscale", "-l", "stdout"]
 
 COPY docker-entrypoint.sh /docker-entrypoint-mxs.sh
 RUN chmod 755 /docker-entrypoint-mxs.sh
@@ -39,3 +39,4 @@ RUN chmod 755 /docker-entrypoint-mxs.sh
 ENTRYPOINT ["/docker-entrypoint-mxs.sh"]
 
 CMD ["maxscale", "-d", "-U", "maxscale", "-l", "stdout"]
+
