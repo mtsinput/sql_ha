@@ -1,2 +1,2 @@
-# sql_ha
-MaxScale for MariaDB Galera HA cluster
+# Custom MaxScale
+Project for build custom MaxScale docker image for MariaDB Galera HA cluster with preconfigured cluster members for deploy in Docker Swarm
