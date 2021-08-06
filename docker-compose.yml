@@ -1,0 +1,124 @@
+---
+version: '3.8'
+volumes:
+  sql_data1:
+    driver: local
+  sql_data2:
+    driver: local
+  sql_data3:
+    driver: local
+
+networks:
+  dbnet:
+    name: sqlnet
+    driver: overlay
+
+services:
+  dblb:
+    #image: mariadb/maxscale
+    image: wdmaster/sql_ha
+    networks:
+      - dbnet
+    ports:
+      - 3307:3306
+      - 8989:8989
+    environment:
+      - BACKEND_SERVER_LIST=db1,db2,db3
+      - ENABLE_ROOT_USER=1
+      - MAX_USER=root
+      - MAX_PASS=password
+    deploy:
+      mode: replicated
+      replicas: 1
+
+  db1:
+    image: docker.io/bitnami/mariadb-galera:10.5
+    networks:
+      - dbnet
+    volumes:
+      - sql_data1:/bitnami/mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=mydb
+      - MARIADB_USER=mydbuser
+      - MARIADB_PASSWORD=mydbpass
+      - MARIADB_GALERA_CLUSTER_NAME=my_galera
+      - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://db1:4567,db2:4567,db3:4567
+      - MARIADB_GALERA_MARIABACKUP_USER=my_mariabackup_user
+      - MARIADB_GALERA_MARIABACKUP_PASSWORD=my_mariabackup_password
+      - MARIADB_GALERA_CLUSTER_BOOTSTRAP=no
+      - MARIADB_REPLICATION_USER=my_replication_user
+      - MARIADB_REPLICATION_PASSWORD=my_replication_password
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb-galera/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.labels.id == 1]
+
+  db2:
+    image: docker.io/bitnami/mariadb-galera:10.5
+    networks:
+      - dbnet
+    volumes:
+      - sql_data2:/bitnami/mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=mydb
+      - MARIADB_USER=mydbuser
+      - MARIADB_PASSWORD=mydbpass
+      - MARIADB_GALERA_CLUSTER_NAME=my_galera
+      - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://db1:4567,db2:4567,db3:4567
+      - MARIADB_GALERA_MARIABACKUP_USER=my_mariabackup_user
+      - MARIADB_GALERA_MARIABACKUP_PASSWORD=my_mariabackup_password
+      - MARIADB_GALERA_CLUSTER_BOOTSTRAP=no
+      - MARIADB_REPLICATION_USER=my_replication_user
+      - MARIADB_REPLICATION_PASSWORD=my_replication_password
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb-galera/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+    deploy:
+      mode: replicated
+      replicas: 0
+      placement:
+        constraints: [node.labels.id == 2]
+
+  db3:
+    image: docker.io/bitnami/mariadb-galera:10.5
+    networks:
+      - dbnet
+    volumes:
+      - sql_data3:/bitnami/mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=password
+      - MARIADB_DATABASE=mydb
+      - MARIADB_USER=mydbuser
+      - MARIADB_PASSWORD=mydbpass
+      - MARIADB_GALERA_CLUSTER_NAME=my_galera
+      - MARIADB_GALERA_CLUSTER_ADDRESS=gcomm://db1:4567,db2:4567,db3:4567
+      - MARIADB_GALERA_MARIABACKUP_USER=my_mariabackup_user
+      - MARIADB_GALERA_MARIABACKUP_PASSWORD=my_mariabackup_password
+      - MARIADB_GALERA_CLUSTER_BOOTSTRAP=no
+      - MARIADB_REPLICATION_USER=my_replication_user
+      - MARIADB_REPLICATION_PASSWORD=my_replication_password
+    healthcheck:
+      test: ['CMD', '/opt/bitnami/scripts/mariadb-galera/healthcheck.sh']
+      interval: 15s
+      timeout: 5s
+      retries: 6
+      start_period: 60s
+    deploy:
+      mode: replicated
+      replicas: 0
+      placement:
+        constraints: [node.labels.id == 3]
+
+
