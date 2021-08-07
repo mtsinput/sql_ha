@@ -14,8 +14,6 @@ networks:
     driver: overlay
 
 services:
-  dblb:
-    #image: mariadb/maxscale
     image: wdmaster/sql_ha
     networks:
       - dbnet
