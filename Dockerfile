@@ -30,9 +30,6 @@ VOLUME ["/etc/maxscale.d"]
 # We expose our set Listener Ports
 EXPOSE $SPLITTER_PORT $ROUTER_PORT $API_PORT
 
-#COPY maxscale.cnf /etc/
-#ENTRYPOINT ["maxscale", "-d", "-U", "maxscale", "-l", "stdout"]
-
 COPY docker-entrypoint.sh /docker-entrypoint-mxs.sh
 RUN chmod 755 /docker-entrypoint-mxs.sh
 
