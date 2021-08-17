@@ -6,6 +6,8 @@ LABEL org.opencontainers.image.authors="wdmaster@gmail.com"
 # We set some defaults for config creation. Can be overwritten at runtime.
 ENV MAX_USER="maxscale" \
     MAX_PASS="maxscalepass" \
+    REST_USER="admin" \
+    REST_PASS="password" \
     ENABLE_ROOT_USER=0 \
     SPLITTER_PORT=3306 \
     ROUTER_PORT=3307 \
@@ -35,5 +37,5 @@ RUN chmod 755 /docker-entrypoint-mxs.sh
 
 ENTRYPOINT ["/docker-entrypoint-mxs.sh"]
 
-CMD ["maxscale", "-d", "-U", "maxscale", "-l", "stdout"]
+#CMD ["maxscale", "-d", "-U", "maxscale", "-l", "stdout"]
 
