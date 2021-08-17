@@ -25,6 +25,8 @@ services:
       - ENABLE_ROOT_USER=1
       - MAX_USER=root
       - MAX_PASS=password
+      - REST_USER=admin
+      - REST_PASS=password
     deploy:
       mode: replicated
       replicas: 1
