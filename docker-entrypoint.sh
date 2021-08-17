@@ -79,3 +79,17 @@ done
 
 
 exec "$@"
+
+set -m
+
+/usr/bin/maxscale --nodaemon --user=maxscale --log=stdout &
+
+sleep 4
+
+/usr/bin/maxctrl --user=admin --password=mariadb create user "tmp_maxscale_user" "tmp_password" --type=admin
+/usr/bin/maxctrl --user=tmp_maxscale_user --password=tmp_password destroy user "admin"
+/usr/bin/maxctrl --user=tmp_maxscale_user --password=tmp_password create user $REST_USER $REST_PASS --type=admin
+/usr/bin/maxctrl --user=$REST_USER --password=$REST_PASS destroy user "tmp_maxscale_user"
+
+fg %1
+
