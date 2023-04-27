@@ -1,4 +1,4 @@
-FROM mariadb/maxscale:2.5.14
+FROM mariadb/maxscale:2.5.25
 LABEL org.opencontainers.image.authors="wdmaster@gmail.com"
 
 # Setup for Galera Service (GS), not for Master-Slave environments

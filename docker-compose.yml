@@ -14,6 +14,7 @@ networks:
     driver: overlay
 
 services:
+  db_lb:
     image: wdmaster/sql_ha
     networks:
       - dbnet
